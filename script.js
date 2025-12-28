@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const typingDiv = document.createElement("div");
     typingDiv.className = "message other typing";
     typingDiv.innerHTML = `
-      <img src="assets/avatar2.png" alt="Anh" class="avatar" />
+      <img src="assets/avatar2.jpg" alt="Anh" class="avatar" />
       <div class="typing-dot"></div>
       <div class="typing-dot"></div>
       <div class="typing-dot"></div>
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const userMsg = document.createElement("div");
       userMsg.className = "message user";
       userMsg.innerHTML = `
-        <img src="assets/avatar1.png" alt="Em" class="avatar" />
+        <img src="assets/em.jpg" alt="Em" class="avatar" />
         <p>${text}</p>
       `;
       messages.appendChild(userMsg);
@@ -126,3 +126,4 @@ document.addEventListener("DOMContentLoaded", () => {
     proposal.classList.add("hidden");
   });
 });
+
