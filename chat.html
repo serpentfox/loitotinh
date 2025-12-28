@@ -138,10 +138,47 @@
           }
         }
       });
-
-      // ✅ Gửi email khi người dùng chọn "Đồng ý" hoặc "Từ chối"
+      // ✅ Gửi email khi người dùng chọn "Đồng ý"
       agreeBtn?.addEventListener("click", () => {
-        const username = localStorage.getItem("foxgaming0504@gmail.com") || "foxgaming0504@gmail.com";
+        const username = localStorage.getItem("username") || "Người dùng";
         const message = "Người dùng đã đồng ý làm em bé của anh! 😍";
 
-        // ✅ Gửi email bằng emailjs
+        // ✅ GỬI EMAIL BẰNG EMAILJS
+        emailjs.send("service_m6k98wm", "service_m6k98wm", {
+          to_email: "foxgaming0504@gmail.com", // 👈 THAY BẰNG EMAIL CỦA BẠN
+          from_name: username,
+          message: message,
+          to_name: "Người yêu",
+          subject: "🔔 Người dùng đã đồng ý yêu anh!"
+        }).then(() => {
+          alert("💌 Lời cầu hôn đã được gửi đến email của bạn!");
+        }).catch((err) => {
+          alert("❌ Lỗi gửi email: " + JSON.stringify(err));
+        });
+
+        agreeBtn.disabled = true;
+        declineBtn.disabled = true;
+      });
+
+      // ✅ Gửi email khi người dùng chọn "Từ chối"
+      declineBtn?.addEventListener("click", () => {
+        const username = localStorage.getItem("username") || "Người dùng";
+        const message = "Người dùng đã từ chối lời cầu hôn. Anh hiểu mà... Cảm ơn em vì đã dành thời gian cho anh.";
+
+        // ✅ GỬI EMAIL BẰNG EMAILJS
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+          to_email: "your-email@gmail.com", // 👈 THAY BẰNG EMAIL CỦA BẠN
+          from_name: username,
+          message: message,
+          to_name: "Người yêu",
+          subject: "💔 Người dùng đã từ chối yêu anh!"
+        }).then(() => {
+          alert("💌 Thông báo từ chối đã được gửi đến email của bạn!");
+        }).catch((err) => {
+          alert("❌ Lỗi gửi email: " + JSON.stringify(err));
+        });
+
+        agreeBtn.disabled = true;
+        declineBtn.disabled = true;
+      });
+
