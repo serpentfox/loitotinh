@@ -12,18 +12,20 @@
       <h3>Tin nhắn</h3>
     </div>
     <div class="chat-messages" id="chatMessages">
-      <div class="message user">
-        <img src="assets/avatar1.png" alt="Bạn" class="avatar" />
+      <div class="message other">
+        <img src="assets/avatar2.png" alt="Anh" class="avatar" />
+        <p>Chào em, anh đang rất hồi hộp khi gửi điều này...</p>
       </div>
       <div class="message other">
-        <img src="assets/avatar2.png" alt="Em" class="avatar" />
-        <p>Chàooo bbyy nhaa
-        </p>
+        <img src="assets/avatar2.png" alt="Anh" class="avatar" />
+             </div>
+      <div class="message user">
+        <img src="assets/avatar1.png" alt="Em" class="avatar" />
+        <p>Ừm, anh đang nói gì vậy?</p>
       </div>
     </div>
     <div class="chat-input">
-      <input type="text" id="messageInput" placeholder="Gửi tin nhắn..." />
-      <button id="sendBtn">Gửi</button>
+      <input type="text" id="messageInput" placeholder="Nhập câu nói tiếp theo..." />
     </div>
     <div id="proposal" class="proposal hidden">
       <p>Em có muốn làm em bé của anh không?</p>
@@ -34,7 +36,112 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const messages = document.getElementById("chatMessages");
+      const messageInput = document.getElementById("messageInput");
+      const proposal = document.getElementById("proposal");
+      const agreeBtn = document.getElementById("agreeBtn");
+      const declineBtn = document.getElementById("declineBtn");
 
+      const responses = [
+        "Anh thấy em nói chuyện rất đáng yêu.",
+        "em có thấy anhh bên em là ổn hông.",
+        "Em có muốn anh làm người bên em mỗi ngàyy hôm",
+        "em có yêu cầu gì khi anh ở bên em hông.",
+        "Em nói gì anh cũng muốn nghe cả đời.",
+        "emm có tinn tưởng anhh hôngg hay còn nghi ngờ anh đấy.",
+        "anhh không hứa mình tốt nhưng anh sẽ cố gắng để tốt khi bên em.",
+        "em có nghĩ anh là người duy nhất khiến anh cảm thấy an toàn.",
+        "Anh muốn được ở bên em mỗi ngày, kể cả khi không nói gì.",
+        "Em cho anh cơ hội được ở bên em nhé <3 "
+      ];
+
+      let userMessageCount = 3;
+
+      function showTypingIndicator() {
+        const typingDiv = document.createElement("div");
+        typingDiv.className = "message other typing";
+        typingDiv.innerHTML = `
+          <img src="assets/avatar2.png" alt="Anh" class="avatar" />
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        `;
+        messages.appendChild(typingDiv);
+        messages.scrollTop = messages.scrollHeight;
+        return typingDiv;
+      }
+
+      function removeTypingIndicator(typingDiv) {
+        typingDiv.remove();
+      }
+
+      function typeText(element, text, delay = 50) {
+        let i = 0;
+        element.textContent = "";
+        const timer = setInterval(() => {
+          if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+          } else {
+            clearInterval(timer);
+          }
+        }, delay);
+      }
+
+      function sendResponse(text) {
+        const typingDiv = showTypingIndicator();
+        setTimeout(() => {
+          removeTypingIndicator(typingDiv);
+          const otherMsg = document.createElement("div");
+          otherMsg.className = "message other";
+          otherMsg.innerHTML = `
+            <img src="assets/avatar2.png" alt="Anh" class="avatar" />
+            <p></p>
+          `;
+          messages.appendChild(otherMsg);
+          messages.scrollTop = messages.scrollHeight;
+          const p = otherMsg.querySelector("p");
+          typeText(p, text, 40);
+          saveChat(text, "other"); // Lưu vào localStorage
+        }, 1000);
+      }
+
+      messageInput?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          const text = messageInput.value.trim();
+          if (!text) return;
+
+          const userMsg = document.createElement("div");
+          userMsg.className = "message user";
+          userMsg.innerHTML = `
+            <img src="assets/avatar1.png" alt="Em" class="avatar" />
+            <p>${text}</p>
+          `;
+          messages.appendChild(userMsg);
+          messages.scrollTop = messages.scrollHeight;
+          saveChat(text, "user"); // Lưu vào localStorage
+
+          userMessageCount++;
+
+          const responseIndex = userMessageCount - 4;
+          if (responseIndex < responses.length) {
+            sendResponse(responses[responseIndex]);
+          }
+
+          messageInput.value = "";
+
+          if (userMessageCount === 10) {
+            proposal.classList.remove("hidden");
+            messageInput.disabled = true;
+          }
+        }
+      });
+
+      // ✅ Gửi email khi người dùng chọn "Đồng ý" hoặc "Từ chối"
+      agreeBtn?.addEventListener("click", () => {
+        const username = localStorage.getItem("foxgaming0504@gmail.com") || "foxgaming0504@gmail.com";
+        const message = "Người dùng đã đồng ý làm em bé của anh! 😍";
+
+        // ✅ Gửi email bằng emailjs
