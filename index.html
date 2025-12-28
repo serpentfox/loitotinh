@@ -3,26 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Đăng nhập - Lời tỏ tình</title>
+  <title>Lời tỏ tình</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="login-container">
-    <h2 class="login-title">Bạn có muốn làm người yêu anh không?</h2>
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="Tên bạn" required />
-      <button type="submit" class="btn">Vào thôi!</button>
-    </form>
+  <div class="container">
+    <h1 class="title">Lời tỏ tình</h1>
+    <p class="subtitle">Bạn có muốn làm người yêu anh không?</p>
+    <button class="btn" onclick="window.location.href='login.html'">Bắt đầu</button>
+    <button class="btn" style="margin-top: 10px; background: #0077cc;" onclick="window.location.href='admin.html'">
+      🔐 Trang Admin (bảo mật)
+    </button>
   </div>
-
-  <div class="background">
-    <img src="flower.jpg" alt="Hoa" class="flower-img" />
-  </div>
-
-  <audio id="bgMusic" loop autoplay>
-    <source src="music.mp3" type="audio/mpeg" />
-  </audio>
-
-  <script src="script.js"></script>
+  <div class="hearts"></div>
 </body>
 </html>
