@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📊 Admin - Quản lý Chat</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .admin-title {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #FF88CC;
+    }
+    .chat-list {
+      max-height: 60vh;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px dashed #FF1493;
+    }
+    .chat-item {
+      background: rgba(255, 255, 255, 0.2);
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 12px;
+      border-left: 4px solid #FF1493;
+      font-size: 0.95rem;
+      text-align: left;
+      position: relative;
+    }
+    .chat-item .user {
+      color: #FF88CC;
+      font-weight: bold;
+    }
+    .chat-item .time {
+      color: #ddd;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+    .chat-item p {
+      margin: 5px 0;
+      line-height: 1.5;
+    }
+    .btn {
+      background: #FF1493;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: all 0.3s ease;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .btn-danger { background: #f44336; }
+    .btn-success { background: #4CAF50; }
+    .no-data {
+      color: #ccc;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+    .clear-btn {
+      margin-top: 20px;
+      background: #ff5555;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .clear-btn:hover { background: #ff3333; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2 class="admin-title">📊 Admin - Quản lý Chat</h2>
+    <p>Hiển thị toàn bộ tin nhắn từ người dùng</p>
+
+    <div class="chat-list" id="chatList">
+      <div class="no-data">Chưa có dữ liệu nào...</div>
+    </div>
+
+    <button class="clear-btn" id="clearBtn">🗑️ Xóa tất cả lịch sử chat</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const chatList = document.getElementById("chatList");
+      const clearBtn = document.getElementById("clearBtn");
+
+      // ✅ Tải lịch sử chat từ localStorage
+      function loadChatHistory() {
+        const saved = localStorage.getItem("chatHistory");
+        if (!saved) {
+          chatList.innerHTML = '<div class="no-data">Chưa có dữ liệu nào...</div>';
+          return;
+        }
+
+        const messages = JSON.parse(saved);
+        if (messages.length === 0) {
+          chatList.innerHTML = '<div class="no-data">Chưa có dữ liệu nào...</div>';
+          return;
+        }
+
+        chatList.innerHTML = ""; // Xóa nội dung cũ
+
+        messages.forEach((msg, index) => {
+          const item = document.createElement("div");
+          item.className = "chat-item";
+          const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          item.innerHTML = `
+            <div class="user">${msg.type === "user" ? "Em" : "Anh"}</div>
+            <p>${msg.text}</p>
+            <span class="time">${time}</span>
+          `;
+          chatList.appendChild(item);
+        });
+      }
+
+      // ✅ Xóa toàn bộ lịch sử chat
+      clearBtn.addEventListener("click", () => {
+        if (confirm("Bạn có chắc muốn xóa tất cả lịch sử chat?")) {
+          localStorage.removeItem("chatHistory");
+          chatList.innerHTML = '<div class="no-data">Lịch sử đã được xóa!</div>';
+          alert("Tất cả lịch sử chat đã bị xóa.");
+        }
+      });
+
+      // ✅ Tải dữ liệu khi trang mở
+      loadChatHistory();
+    });
+  </script>
+</body>
+</html>

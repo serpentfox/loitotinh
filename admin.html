@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔐 Admin - Bảo mật</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #FF69B4, #FFC0CB);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      color: #fff;
+    }
+    .login-container {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 40px 50px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .login-container h2 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      text-shadow: 0 0 10px #fff, 0 0 20px #ff88cc;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+      outline: none;
+      text-align: center;
+    }
+    input[type="password"]::placeholder {
+      color: #ddd;
+    }
+    button {
+      background: #FF1493;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 20, 147, 0.6);
+    }
+    .error {
+      color: #ff4444;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>🔐 Trang Admin</h2>
+    <p>Nhập mật khẩu để truy cập</p>
+    <input type="password" id="passwordInput" placeholder="Nhập mật khẩu..." />
+    <div id="error" class="error">❌ Sai mật khẩu! Vui lòng thử lại.</div>
+    <button onclick="checkPassword()">Vào thôi!</button>
+  </div>
+
+  <script>
+    // ✅ Đặt mật khẩu tại đây (chỉ bạn biết)
+    const ADMIN_PASSWORD = "nguyencao@231020"; // 👈 Thay bằng mật khẩu bạn muốn
+
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value.trim();
+      const error = document.getElementById("error");
+
+      if (input === ADMIN_PASSWORD) {
+        window.location.href = "admin-dashboard.html"; // Chuyển sang trang chính
+      } else {
+        error.style.display = "block";
+        document.getElementById("passwordInput").value = "";
+        document.getElementById("passwordInput").focus();
+      }
+    }
+
+    // Nhấn Enter để đăng nhập
+    document.getElementById("passwordInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") checkPassword();
+    });
+  </script>
+</body>
+</html>
