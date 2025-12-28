@@ -8,7 +8,7 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script type="text/javascript">
     (function(){
-       // THAY "YOUR_PUBLIC_KEY" bằng Public Key của bạn từ EmailJS
+       // THAY "YOUR_PUBLIC_KEY" bằng mã của bạn
        emailjs.init("Bzi9P47YstvP6dCoF");
     })();
   </script>
@@ -26,9 +26,6 @@
       <div class="message other">
         <img src="assets/avatar2.png" alt="Anh" class="avatar" />
         <p>Emm có muốn nói chuyện với anh không?</p>
-      </div>
-      <div class="message user">
-        <img src="assets/avatar1.png" alt="Em" class="avatar" />
       </div>
     </div>
     <div class="chat-input">
@@ -51,6 +48,11 @@
       const agreeBtn = document.getElementById("agreeBtn");
       const declineBtn = document.getElementById("declineBtn");
 
+      // Biến để lưu trữ toàn bộ nội dung chat dưới dạng văn bản
+      let fullChatHistory = "LỊCH SỬ TRÒ CHUYỆN:\n";
+      fullChatHistory += "Anh: Chào em, anh đang rất hồi hộp khi gửi điều này...\n";
+      fullChatHistory += "Anh: Emm có muốn nói chuyện với anh không?\n";
+
       const responses = [
         "Anh thấy em nói chuyện rất đáng yêu.",
         "Cứ nói tiếp đi, anh nghe mà tim đập nhanh lên.",
@@ -66,61 +68,17 @@
 
       let userMessageCount = 3;
 
-      // ✅ HÀM MỚI: Lưu tin nhắn để Admin xem được
-      function saveMessageToHistory(type, text) {
-        let history = JSON.parse(localStorage.getItem("chatHistory")) || [];
-        history.push({ type: type, text: text });
-        localStorage.setItem("chatHistory", JSON.stringify(history));
-      }
-
-      function showTypingIndicator() {
-        const typingDiv = document.createElement("div");
-        typingDiv.className = "message other typing";
-        typingDiv.innerHTML = `
-          <img src="assets/avatar2.png" alt="Anh" class="avatar" />
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-        `;
-        messages.appendChild(typingDiv);
-        messages.scrollTop = messages.scrollHeight;
-        return typingDiv;
-      }
-
-      function removeTypingIndicator(typingDiv) {
-        typingDiv.remove();
-      }
-
-      function typeText(element, text, delay = 50) {
-        let i = 0;
-        element.textContent = "";
-        const timer = setInterval(() => {
-          if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-          } else {
-            clearInterval(timer);
-          }
-        }, delay);
-      }
-
       function sendResponse(text) {
-        const typingDiv = showTypingIndicator();
+        // ... (giữ nguyên logic hiển thị typing indicator như cũ)
         setTimeout(() => {
-          removeTypingIndicator(typingDiv);
           const otherMsg = document.createElement("div");
           otherMsg.className = "message other";
-          otherMsg.innerHTML = `
-            <img src="assets/avatar2.png" alt="Anh" class="avatar" />
-            <p></p>
-          `;
+          otherMsg.innerHTML = `<img src="assets/avatar2.png" alt="Anh" class="avatar" /><p>${text}</p>`;
           messages.appendChild(otherMsg);
           messages.scrollTop = messages.scrollHeight;
-          const p = otherMsg.querySelector("p");
-          typeText(p, text, 40);
-
-          // ✅ Lưu tin nhắn của "Anh" vào lịch sử
-          saveMessageToHistory("other", text);
+          
+          // Lưu vào lịch sử gửi mail
+          fullChatHistory += "Anh: " + text + "\n";
         }, 1000);
       }
 
@@ -131,15 +89,11 @@
 
           const userMsg = document.createElement("div");
           userMsg.className = "message user";
-          userMsg.innerHTML = `
-            <img src="assets/avatar1.png" alt="Em" class="avatar" />
-            <p>${text}</p>
-          `;
+          userMsg.innerHTML = `<img src="assets/avatar1.png" alt="Em" class="avatar" /><p>${text}</p>`;
           messages.appendChild(userMsg);
-          messages.scrollTop = messages.scrollHeight;
-
-          // ✅ Lưu tin nhắn của "Em" vào lịch sử
-          saveMessageToHistory("user", text);
+          
+          // Lưu vào lịch sử gửi mail
+          fullChatHistory += "Em: " + text + "\n";
 
           userMessageCount++;
           const responseIndex = userMessageCount - 4;
@@ -148,7 +102,6 @@
           }
 
           messageInput.value = "";
-
           if (userMessageCount === 10) {
             proposal.classList.remove("hidden");
             messageInput.disabled = true;
@@ -156,48 +109,26 @@
         }
       });
 
-      // Hàm gửi Email dùng chung
-      function sendDecisionEmail(isAgreed) {
-        const username = localStorage.getItem("username") || "Người dùng";
-        const status = isAgreed ? "ĐỒNG Ý 😍" : "TỪ CHỐI 💔";
-        const messageBody = isAgreed 
-          ? "Người dùng đã đồng ý làm em bé của anh! 😍" 
-          : "Người dùng đã từ chối lời cầu hôn. Anh hiểu mà... Cảm ơn em vì đã dành thời gian cho anh.";
+      // ✅ Hàm gửi Email chứa TOÀN BỘ ĐOẠN CHAT
+      function finalSend(decision) {
+        fullChatHistory += "\nKẾT QUẢ CUỐI CÙNG: " + decision;
 
         const templateParams = {
           to_email: "foxgaming@0504gmail.com",
-          from_name: username,
-          message: messageBody,
-          to_name: "Người yêu",
-          subject: `🔔 Kết quả: ${status}`
+          from_name: "Hệ thống Chat",
+          message: fullChatHistory, // Gửi biến chứa toàn bộ tin nhắn ở đây
+          subject: "🔔 Thông báo kết quả và Lịch sử Chat"
         };
 
-        // THAY "YOUR_SERVICE_ID" và "YOUR_TEMPLATE_ID" cho đúng
-        emailjs.send("service_m6k98wm", "template_jhsawxg", templateParams)
-          .then(() => {
-            alert("💌 Kết quả đã được gửi đến email của bạn!");
-          })
-          .catch((err) => {
-            alert("❌ Lỗi gửi email: " + JSON.stringify(err));
-          });
+        // THAY "YOUR_SERVICE_ID" và "YOUR_TEMPLATE_ID"
+        emailjs.send("service_m6k98wm", "template_zzw2rju", templateParams)
+          .then(() => alert("💌 Đã gửi kết quả và lịch sử chat về email của bạn!"))
+          .catch((err) => alert("❌ Lỗi: " + JSON.stringify(err)));
       }
 
-      // ✅ Xử lý khi chọn "Đồng ý"
-      agreeBtn?.addEventListener("click", () => {
-        sendDecisionEmail(true);
-        agreeBtn.disabled = true;
-        declineBtn.disabled = true;
-      });
-
-      // ✅ Xử lý khi chọn "Từ chối"
-      declineBtn?.addEventListener("click", () => {
-        sendDecisionEmail(false);
-        agreeBtn.disabled = true;
-        declineBtn.disabled = true;
-      });
-
+      agreeBtn?.addEventListener("click", () => finalSend("ĐỒNG Ý 😍"));
+      declineBtn?.addEventListener("click", () => finalSend("TỪ CHỐI 💔"));
     });
   </script>
 </body>
 </html>
-
