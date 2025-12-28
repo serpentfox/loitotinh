@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chat - Lời tỏ tình</title>
   <link rel="stylesheet" href="style.css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+       // THAY "YOUR_PUBLIC_KEY" bằng Public Key của bạn từ EmailJS
+       emailjs.init("Bzi9P47YstvP6dCoF");
+    })();
+  </script>
 </head>
 <body>
   <div class="chat-container">
@@ -22,7 +29,7 @@
       </div>
       <div class="message user">
         <img src="assets/avatar1.png" alt="Em" class="avatar" />
-             </div>
+      </div>
     </div>
     <div class="chat-input">
       <input type="text" id="messageInput" placeholder="Nhập câu nói tiếp theo..." />
@@ -137,46 +144,42 @@
         }
       });
 
-            // ✅ Gửi email khi người dùng chọn "Đồng ý"
-      agreeBtn?.addEventListener("click", () => {
+      // Hàm gửi Email dùng chung
+      function sendDecisionEmail(isAgreed) {
         const username = localStorage.getItem("username") || "Người dùng";
-        const message = "Người dùng đã đồng ý làm em bé của anh! 😍";
+        const status = isAgreed ? "ĐỒNG Ý 😍" : "TỪ CHỐI 💔";
+        const messageBody = isAgreed 
+          ? "Người dùng đã đồng ý làm em bé của anh! 😍" 
+          : "Người dùng đã từ chối lời cầu hôn. Anh hiểu mà... Cảm ơn em vì đã dành thời gian cho anh.";
 
-        // ✅ GỬI EMAIL BẰNG EMAILJS
-        emailjs.send("service_m6k98wm", "service_m6k98wm", {
-          to_email: "foxgaming@0504gmail.com", // 👈 THAY BẰNG EMAIL CỦA BẠN
+        const templateParams = {
+          to_email: "foxgaming@0504gmail.com",
           from_name: username,
-          message: message,
+          message: messageBody,
           to_name: "Người yêu",
-          subject: "🔔 Người dùng đã đồng ý yêu anh!"
-        }).then(() => {
-          alert("💌 Lời cầu hôn đã được gửi đến email của bạn!");
-        }).catch((err) => {
-          alert("❌ Lỗi gửi email: " + JSON.stringify(err));
-        });
+          subject: `🔔 Kết quả: ${status}`
+        };
 
+        // THAY "YOUR_SERVICE_ID" và "YOUR_TEMPLATE_ID" cho đúng
+        emailjs.send("service_m6k98wm", "template_jhsawxg", templateParams)
+          .then(() => {
+            alert("💌 Kết quả đã được gửi đến email của bạn!");
+          })
+          .catch((err) => {
+            alert("❌ Lỗi gửi email: " + JSON.stringify(err));
+          });
+      }
+
+      // ✅ Xử lý khi chọn "Đồng ý"
+      agreeBtn?.addEventListener("click", () => {
+        sendDecisionEmail(true);
         agreeBtn.disabled = true;
         declineBtn.disabled = true;
       });
 
-      // ✅ Gửi email khi người dùng chọn "Từ chối"
+      // ✅ Xử lý khi chọn "Từ chối"
       declineBtn?.addEventListener("click", () => {
-        const username = localStorage.getItem("username") || "Người dùng";
-        const message = "Người dùng đã từ chối lời cầu hôn. Anh hiểu mà... Cảm ơn em vì đã dành thời gian cho anh.";
-
-        // ✅ GỬI EMAIL BẰNG EMAILJS
-        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-          to_email: "your-email@gmail.com", // 👈 THAY BẰNG EMAIL CỦA BẠN
-          from_name: username,
-          message: message,
-          to_name: "Người yêu",
-          subject: "💔 Người dùng đã từ chối yêu anh!"
-        }).then(() => {
-          alert("💌 Thông báo từ chối đã được gửi đến email của bạn!");
-        }).catch((err) => {
-          alert("❌ Lỗi gửi email: " + JSON.stringify(err));
-        });
-
+        sendDecisionEmail(false);
         agreeBtn.disabled = true;
         declineBtn.disabled = true;
       });
