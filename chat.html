@@ -18,11 +18,11 @@
       </div>
       <div class="message other">
         <img src="assets/avatar2.png" alt="Anh" class="avatar" />
-             </div>
+        <p>Emm có muốn nói chuyện với anh không?</p>
+      </div>
       <div class="message user">
         <img src="assets/avatar1.png" alt="Em" class="avatar" />
-        <p>Ừm, anh đang nói gì vậy?</p>
-      </div>
+             </div>
     </div>
     <div class="chat-input">
       <input type="text" id="messageInput" placeholder="Nhập câu nói tiếp theo..." />
@@ -46,15 +46,15 @@
 
       const responses = [
         "Anh thấy em nói chuyện rất đáng yêu.",
-        "em có thấy anhh bên em là ổn hông.",
-        "Em có muốn anh làm người bên em mỗi ngàyy hôm",
-        "em có yêu cầu gì khi anh ở bên em hông.",
+        "Cứ nói tiếp đi, anh nghe mà tim đập nhanh lên.",
+        "Em thấy anh cần sửa điều gì khi yêu em không ",
+        "Anh chỉ cần em ở đây, dù chỉ là một tin nhắn.",
         "Em nói gì anh cũng muốn nghe cả đời.",
-        "emm có tinn tưởng anhh hôngg hay còn nghi ngờ anh đấy.",
-        "anhh không hứa mình tốt nhưng anh sẽ cố gắng để tốt khi bên em.",
-        "em có nghĩ anh là người duy nhất khiến anh cảm thấy an toàn.",
+        "Anhh hôngg nói là mình tốt nhưng anhh sẽ khong tồi khi bên em đâuu",
+        "Anh cũng muốn được là người được yêu ý",
+        "Anh nghĩ em là người duy nhất khiến anh cảm thấy an toàn.",
         "Anh muốn được ở bên em mỗi ngày, kể cả khi không nói gì.",
-        "Em cho anh cơ hội được ở bên em nhé <3 "
+        "Em có thể cho anh cơ hội được không "
       ];
 
       let userMessageCount = 3;
@@ -104,7 +104,6 @@
           messages.scrollTop = messages.scrollHeight;
           const p = otherMsg.querySelector("p");
           typeText(p, text, 40);
-          saveChat(text, "other"); // Lưu vào localStorage
         }, 1000);
       }
 
@@ -121,7 +120,6 @@
           `;
           messages.appendChild(userMsg);
           messages.scrollTop = messages.scrollHeight;
-          saveChat(text, "user"); // Lưu vào localStorage
 
           userMessageCount++;
 
@@ -138,14 +136,15 @@
           }
         }
       });
-      // ✅ Gửi email khi người dùng chọn "Đồng ý"
+
+            // ✅ Gửi email khi người dùng chọn "Đồng ý"
       agreeBtn?.addEventListener("click", () => {
         const username = localStorage.getItem("username") || "Người dùng";
         const message = "Người dùng đã đồng ý làm em bé của anh! 😍";
 
         // ✅ GỬI EMAIL BẰNG EMAILJS
         emailjs.send("service_m6k98wm", "service_m6k98wm", {
-          to_email: "foxgaming0504@gmail.com", // 👈 THAY BẰNG EMAIL CỦA BẠN
+          to_email: "foxgaming@0504gmail.com", // 👈 THAY BẰNG EMAIL CỦA BẠN
           from_name: username,
           message: message,
           to_name: "Người yêu",
@@ -182,3 +181,7 @@
         declineBtn.disabled = true;
       });
 
+    });
+  </script>
+</body>
+</html>
