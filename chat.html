@@ -66,6 +66,13 @@
 
       let userMessageCount = 3;
 
+      // ✅ HÀM MỚI: Lưu tin nhắn để Admin xem được
+      function saveMessageToHistory(type, text) {
+        let history = JSON.parse(localStorage.getItem("chatHistory")) || [];
+        history.push({ type: type, text: text });
+        localStorage.setItem("chatHistory", JSON.stringify(history));
+      }
+
       function showTypingIndicator() {
         const typingDiv = document.createElement("div");
         typingDiv.className = "message other typing";
@@ -111,6 +118,9 @@
           messages.scrollTop = messages.scrollHeight;
           const p = otherMsg.querySelector("p");
           typeText(p, text, 40);
+
+          // ✅ Lưu tin nhắn của "Anh" vào lịch sử
+          saveMessageToHistory("other", text);
         }, 1000);
       }
 
@@ -128,8 +138,10 @@
           messages.appendChild(userMsg);
           messages.scrollTop = messages.scrollHeight;
 
-          userMessageCount++;
+          // ✅ Lưu tin nhắn của "Em" vào lịch sử
+          saveMessageToHistory("user", text);
 
+          userMessageCount++;
           const responseIndex = userMessageCount - 4;
           if (responseIndex < responses.length) {
             sendResponse(responses[responseIndex]);
@@ -188,3 +200,4 @@
   </script>
 </body>
 </html>
+
