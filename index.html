@@ -5,16 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lời tỏ tình</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0077cc;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 119, 204, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .admin-button:hover {
+      transform: scale(1.1);
+      background: #005599;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1 class="title">Lời tỏ tình</h1>
     <p class="subtitle">Bạn có muốn làm người yêu anh không?</p>
     <button class="btn" onclick="window.location.href='login.html'">Bắt đầu</button>
-    <button class="btn" style="margin-top: 10px; background: #0077cc;" onclick="window.location.href='admin.html'">
-      🔐 Trang Admin (bảo mật)
-    </button>
   </div>
+
+  <!-- ✅ Nút Admin nhỏ gọn ở góc phải dưới -->
+  <button class="admin-button" onclick="window.location.href='admin.html'">🔑</button>
+
   <div class="hearts"></div>
 </body>
 </html>
